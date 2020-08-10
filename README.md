@@ -12,10 +12,11 @@
   * [Introduction](#introduction)
   * [Image variants](#image-variants)
   * [Usage](#usage)
-     * [Starting with Docker named volumes (for beginners)](#starting-with-docker-named-volumes-for-beginners)
-        * [Running from command line](#running-from-command-line)
-        * [Running from compose-file.yml](#running-from-compose-fileyml)
-     * [Running openHAB with libpcap support](#running-openhab-with-libpcap-support)
+     * [Running with linux or docker-machine on MacOS and Windows](#running-with-linux-or-docker-machine-on-macos-and-windows)  
+       * [Starting with Docker named volumes (for beginners)](#starting-with-docker-named-volumes-for-beginners)
+          * [Running from command line](#running-from-command-line)
+          * [Running from compose-file.yml](#running-from-compose-fileyml)
+       * [Running openHAB with libpcap support](#running-openhab-with-libpcap-support)
      * [Running on Windows and macOS](#running-on-windows-and-macos)
      * [Starting with Docker mounting a host directory (for advanced user)](#starting-with-docker-mounting-a-host-directory-for-advanced-user)
      * [Automating Docker setup using ansible (for advanced user)](#automating-docker-setup-using-ansible-for-advanced-user)
@@ -107,7 +108,8 @@ The following will run openHAB in demo mode on the host machine:
 _**NOTE:** Although this is the simplest method to getting openHAB up and running, but it is not the preferred method.
 To properly run the container, please specify a **host volume** for the directories._
 
-### Starting with Docker named volumes (for beginners)
+### Running with Linux or docker-machine on MacOS and windows
+#### Starting with Docker named volumes (for beginners)
 
 Following configuration uses Docker named data volumes. These volumes will survive, if you delete or upgrade your container.
 It is a good starting point for beginners.
@@ -115,7 +117,7 @@ The volumes are created in the Docker volume directory.
 You can use `docker inspect openhab` to locate the directories (e.g. /var/lib/docker/volumes) on your host system.
 For more information visit [Manage data in containers](https://docs.docker.com/engine/tutorials/dockervolumes/).
 
-#### Running from command line
+##### Running from command line
 
 ```shell
 docker run \
@@ -132,7 +134,7 @@ docker run \
   openhab/openhab:2.5.7
 ```
 
-#### Running from compose-file.yml
+##### Running from compose-file.yml
 
 Create the following `docker-compose.yml` for use of local directories and start the container with `docker-compose up -d`
 
@@ -186,7 +188,7 @@ volumes:
     driver: local
 ```
 
-### Running openHAB with libpcap support
+#### Running openHAB with libpcap support
 
 You can run all openHAB images with libpcap support.
 This enables you to use the *Amazon Dashbutton Binding* in the Docker container.
@@ -330,7 +332,7 @@ To add the console logger, edit `userdata/etc/org.ops4j.pax.logging.cfg` and the
 
 #### Regular mode
 
-When a TTY is provided openHAB is started with an interactive console, e.g.: 
+When a TTY is provided openHAB is started with an interactive console, e.g.:
 
 `docker run -it openhab/openhab:2.5.7`
 
@@ -354,7 +356,7 @@ The debug mode is started with the command:
 
 ### User and group identifiers
 
-Group id will default to the same value as the user id. 
+Group id will default to the same value as the user id.
 By default the openHAB user in the container is running with:
 
 * `uid=9001(openhab) gid=9001(openhab) groups=9001(openhab)`
@@ -369,7 +371,7 @@ useradd -u 9001 -g openhab -r -s /sbin/nologin openhab
 usermod -a -G openhab myownuser
 ```
 
-* Or run the Docker container with your own user AND passing the userid to openHAB through env
+* Or run the Docker container with your own user AND passing the userid to openHAB through env. Please make sure your GID has not conflict with the preserved GIDs (10 14 16 18 20 32 997) for debian or (10 20) for Alphine
 
 ```shell
 docker run \

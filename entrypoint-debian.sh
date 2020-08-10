@@ -27,6 +27,15 @@ rm -f "${OPENHAB_USERDATA}/tmp/instances/instance.properties"
 # Container base image puts dialout on group id 20, uucp on id 10
 # GPIO Group for RPI access
 NEW_USER_ID=${USER_ID:-9001}
+
+#Check to see the the GROUP_ID has conflict with with preserved_group_id as below
+preserved_group_id=(10 14 16 18 20 32 997)
+for gid in ${preserved_group_id[@]}; do
+  if [ $gid -eq $GROUP_ID ]; then
+    echo "The group ID $GROUP_ID has conflicts with the preserved group_id list ${preserved_group_id[*]}. Please choose another group id."
+    exit
+  fi
+done
 NEW_GROUP_ID=${GROUP_ID:-$NEW_USER_ID}
 echo "Starting with openhab user id: $NEW_USER_ID and group id: $NEW_GROUP_ID"
 if ! id -u openhab >/dev/null 2>&1; then
