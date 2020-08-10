@@ -188,7 +188,7 @@ volumes:
     driver: local
 ```
 
-#### Running openHAB with libpcap support
+##### Running openHAB with libpcap support
 
 You can run all openHAB images with libpcap support.
 This enables you to use the *Amazon Dashbutton Binding* in the Docker container.
